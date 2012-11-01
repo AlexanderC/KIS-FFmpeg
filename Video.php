@@ -85,7 +85,7 @@ class Video {
             self::BINARY,
             "-y",
             '-i ' . escapeshellarg($this->file),
-            ($strict ? "-strict experimental" : ""),
+            (!$strict ? "-strict experimental" : ""),
             $extraOptions,
             "-c:v " . escapeshellarg(strtolower($videoCodec)),
             "-c:a " . escapeshellarg(strtolower($audioCodec)),
