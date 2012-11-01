@@ -126,7 +126,7 @@ class Video {
             
             $newFile = new \SplFileInfo($newFile);
         }
-        
+        exit("do not try this now!! We are debugging here, Natasha...");
         $command = array(
             self::BINARY,
             "-y",
@@ -186,15 +186,25 @@ class Video {
      * @return void
      */
     private function clearRawInfoData(){
+        $videoString = "";
+        $audioString = "";
+        
         foreach($this->rawInfo as $key => $dataString){
             if(!preg_match('/^\s*(Duration:|Stream){1}.+/ui', $dataString)){
                 unset($this->rawInfo[$key]);
+            } elseif (preg_match('/:\s*Audio\s*:/ui', $dataString)) {
+                $audioString = $dataString;
+            } elseif (preg_match('/:\s*Video\s*:/ui', $dataString)) {
+                $videoString = $dataString;
             }
+            
+            if(!empty($audioString) && !empty($videoString)) break;
         } 
         
         $this->rawInfo = array_values($this->rawInfo);
+        
         $this->rawInfo = array(
-            $this->rawInfo[0], $this->rawInfo[1], $this->rawInfo[2],
+            $this->rawInfo[0], $videoString, $audioString
         );
     }
     
